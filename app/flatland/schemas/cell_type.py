@@ -1,0 +1,15 @@
+from enum import Enum
+
+
+class CellType(Enum):
+    EMPTY = 0
+    STRAIGHT = 1
+    SIMPLE_SWITCH = 2
+    DIAMOND_CROSSING = 3
+    SINGLE_SLIP = 4
+    DOUBLE_SLIP = 5
+    SYMMETRICAL = 6
+    DEAD_END = 7
+    SIMPLE_TURN_RIGHT = 8
+    SIMPLE_TURN_LEFT = 9
+    SIMPLE_SWITCH_MIRRORED = 10
