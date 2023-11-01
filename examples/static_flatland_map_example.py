@@ -69,7 +69,7 @@ def basic_static_map() -> Tuple[GridTransitionMap, dict[str, dict[str, Any]]]:
     # with a padding of empty cells and empty cells in the middle
     grid = np.array(
         [[empty] * (4+number_of_straight_rails)] +
-        [[empty] + [se_turn] + [we_straight] * (number_of_straight_rails-1)+[empty] + [ws_turn] + [empty]] +
+        [[empty] + [se_turn] + [we_straight] * number_of_straight_rails + [ws_turn] + [empty]] +
         [[empty] + [sn_straight] + [empty] * number_of_straight_rails + [sn_straight] + [empty]] * number_of_straight_rails +
         [[empty] + [en_turn] + [we_straight] * number_of_straight_rails + [nw_turn] + [empty]] +
         [[empty] * (4+number_of_straight_rails)], dtype=np.uint16
