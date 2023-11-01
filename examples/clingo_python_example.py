@@ -19,7 +19,7 @@ def on_model(model: Model) -> None:
 ctl = Control()
 
 # Load some ASP instance from a file
-ctl.load("clingo_python_example_instance.lp")
+ctl.load("clingo_python_example_instance_and_encoding.lp")
 
 # Ground the program
 ctl.ground()
