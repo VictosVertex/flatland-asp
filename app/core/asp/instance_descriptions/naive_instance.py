@@ -100,6 +100,11 @@ class NaiveInstance:
             actions = CELL_TYPE_TO_ACTION_MAP[cell_type]
 
             for agent_orientation, row in enumerate(actions):
+                # Halting is always possible
+                # for now we add it like this for every cell
+                possible_action = f"possible_action({cell_type.value}, {agent_orientation}, 3)."
+                possible_actions.append(possible_action)
+
                 for action in row:
                     possible_action = f"possible_action({cell_type.value}, {agent_orientation}, {action.value})."
                     possible_actions.append(possible_action)
