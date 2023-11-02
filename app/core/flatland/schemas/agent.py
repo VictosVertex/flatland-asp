@@ -1,5 +1,5 @@
-from app.flatland.schemas.orientation import Orientation
-from app.flatland.schemas.position import Position
+from app.core.flatland.schemas.orientation import Orientation
+from app.core.flatland.schemas.position import Position
 from pydantic import BaseModel
 
 
