@@ -54,13 +54,13 @@ class InstanceGenerator:
                 Agent(
                     id=i,
                     position=Position(
-                        x=agent.initial_position[0],
-                        y=agent.initial_position[1]
+                        x=agent.initial_position[1],
+                        y=agent.initial_position[0]
                     ),
                     orientation=Orientation(int(agent.direction)),
                     target=Position(
-                        x=agent.target[0],
-                        y=agent.target[1]
+                        x=agent.target[1],
+                        y=agent.target[0]
                     )
                 )
             )
