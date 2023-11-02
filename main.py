@@ -1,11 +1,11 @@
 import time
+import numpy as np
 from typing import Any, Tuple
 from app.core.asp.instance_descriptions.naive_instance import NaiveInstance
 from app.core.asp.instance_generator import InstanceGenerator
 from app.core.flatland.static_maps import example_basic_static_map, straight_hirozontal_line_map
-
-import numpy as np
-
+from clingo.control import Control
+from clingo import Model
 from flatland.core.grid.rail_env_grid import RailEnvTransitions
 from flatland.core.transition_map import GridTransitionMap
 from flatland.envs.line_generators import sparse_line_generator
@@ -44,6 +44,15 @@ def simulate_environment(env: RailEnv,
         time.sleep(step_delay)
 
 
+def on_model(model: Model) -> None:
+    """ Prints the current model to the terminal
+
+        Args:
+            model: Model that was found, which satisfies the provided instance/encoding
+    """
+    print(f"{model}")
+
+
 if __name__ == '__main__':
     env = create_environment()
     env.reset()
@@ -51,6 +60,19 @@ if __name__ == '__main__':
     asp_generator = InstanceGenerator(instance_description=NaiveInstance())
     asp_generator.generate_instance_for_environment(env=env)
     asp_generator.store_instance('naive_test_instance')
+
+    ctl = Control()
+    # Load instance from file
+    ctl.load("asp/instances/naive_test_instance.lp")
+    # Load encoding from file
+    ctl.load("asp/encodings/straight_line_naive_encoding.lp")
+    # Ground the program
+    ctl.ground()
+    # ctl.configuration.solve.models = 5
+    result = ctl.solve(on_model=on_model)
+
+    print(result)
+
     render = False
 
     if render:
