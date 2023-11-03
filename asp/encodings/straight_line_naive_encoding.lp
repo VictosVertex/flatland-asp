@@ -1,9 +1,6 @@
 % This is a basic variant of the naive encoding
 % it is specifically for straight line maps, 
 % so it only contains rules for straight tracks.
-%
-% All T-values have to be altered in case the map 
-% differs from the default map.
 
 % At each time step the agent has to choose one
 % action from all actions possible at the location
@@ -11,8 +8,10 @@
 {agent_action(I,A,T):possible_action(C,F,A)} = 1:-  agent_position(I,X,Y,T), 
                                                     agent_orientation(I,O,T), 
                                                     cell(X,Y,C,O'),
+                                                    agent_state(I,0,T),
+                                                    step_limit(L),
                                                     F=(4+O-O')\4, 
-                                                    T<10.
+                                                    T<L.
 
 % Update orientations
 %
@@ -26,8 +25,7 @@ agent_orientation(I,O,T+1) :- agent_action(I,3,T), agent_orientation(I,O,T).
 agent_orientation(I,O,T+1) :- agent_action(I,0,T), 
                             agent_position(I,X,Y,T),
                             agent_orientation(I,O,T),
-                            cell(X,Y,C,_),
-                            C=1.
+                            cell(X,Y,1,_).
 % Update positions
 %
 % If the halting action (3) is chosen
@@ -44,9 +42,15 @@ agent_position(I,X',Y',T+1) :-  agent_action(I,A,T),
                                 X'=X-(O - 2)* (O \ 2), 
                                 Y'=Y+(O - 1)* ((O+1) \ 2).
 
+% As long as the agent is not at their target
+% the state remains 0 (has not arrived yet), otherwise
+% the state changes to 1 (has arrived).
+agent_state(I,0,T) :- agent_position(I,X,Y,T), agent_target(I,X',Y'),X-X'+Y-Y'!=0.
+agent_state(I,1,T) :- agent_position(I,X,Y,T), agent_target(I,X',Y'),X-X'+Y-Y'==0.
+
 % At time step greater than 4 the agent can not be at
 % any position which is not the position of the target.
-:- agent_position(I,X,Y,T), agent_target(I,X',Y'),X-X'+Y-Y'!=0, T>4.
+:- agent_state(I,0,T),step_limit(L), T>(L-1).
 
 #show agent_action/3.
 #show agent_position/4.

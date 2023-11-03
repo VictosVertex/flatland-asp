@@ -17,15 +17,20 @@ class InstanceGenerator:
         self.instance_description = instance_description
         self.instance = None
 
-    def generate_instance_for_environment(self, *, env: RailEnv):
+    def generate_instance_for_environment(self, *, env: RailEnv, step_limit: int = 100):
         cells, cell_types = self._get_cells_and_types_from_environment(env)
         agents = self._get_agents_from_environment(env)
 
-        self.instance = self.instance_description.get_full_description(
-            cells=cells,
-            cell_types=cell_types,
-            agents=agents
-        )
+        instance = [
+            f'step_limit({step_limit}).',
+            *self.instance_description.get_full_description(
+                cells=cells,
+                cell_types=cell_types,
+                agents=agents
+            )
+        ]
+
+        self.instance = instance
 
     def generate_instance_header(self) -> list[str]:
         header = inspect.cleandoc(
