@@ -36,7 +36,7 @@ agent_position(I,X,Y,T+1) :- agent_action(I,3,T), agent_position(I,X,Y,T).
 % then move one step forward into orientation direction
 % and advance time step
 agent_position(I,X',Y',T+1) :-  agent_action(I,A,T),
-                                agent_orientation(I,O,T), 
+                                agent_orientation(I,O,T+1), 
                                 agent_position(I,X,Y,T),
                                 A != 3,
                                 X'=X-(O - 2)* (O \ 2), 
