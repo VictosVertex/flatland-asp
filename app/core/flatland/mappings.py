@@ -79,8 +79,8 @@ CELL_ID_TO_TYPE_AND_ORIENTATON_MAP: dict[int, Tuple[CellType, Orientation]] = {
 
     37408: (CellType.SIMPLE_SWITCH, Orientation.NORTH),
     3089: (CellType.SIMPLE_SWITCH, Orientation.EAST),
-    3089: (CellType.SIMPLE_SWITCH, Orientation.SOUTH),
-    3089: (CellType.SIMPLE_SWITCH, Orientation.WEST),
+    32872: (CellType.SIMPLE_SWITCH, Orientation.SOUTH),
+    17411: (CellType.SIMPLE_SWITCH, Orientation.WEST),
 
     33825: (CellType.DIAMOND_CROSSING, Orientation.NORTH),
 
