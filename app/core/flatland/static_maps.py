@@ -13,7 +13,7 @@ def straight_hirozontal_line_map(*, length: int, padding: int) -> Tuple[GridTran
 
     grid = np.array(
         [[empty] * (length+2*padding)]*padding +
-        [[empty] + [we_straight] * length + [empty]] +
+        [[empty]*padding + [we_straight] * length + [empty]*padding] +
         [[empty] * (length+2*padding)]*padding
     )
 
