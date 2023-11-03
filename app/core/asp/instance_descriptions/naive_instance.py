@@ -117,14 +117,14 @@ class NaiveInstance:
     def get_agents_header(self) -> list[str]:
         header = inspect.cleandoc(
             f"""% Agents are defined in three literals
-                %   agent_position(I,X,Y,O,T).
+                %   agent_position(I,X,Y,T).
                 %
                 %   - I: Id
                 %   - X: X coordinate of position
                 %   - Y: Y coordinate of position
                 %   - T: Time step, default is 0
                 %
-                %   agent_orientation(I,X,Y,O,T).
+                %   agent_orientation(I,O,T).
                 %
                 %   - I: Id
                 %   - O: Orientation
