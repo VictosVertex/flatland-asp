@@ -2,7 +2,7 @@ import time
 from typing import Any, Tuple
 from app.core.asp.instance_descriptions.naive_instance import NaiveInstance
 from app.core.asp.instance_generator import InstanceGenerator
-from app.core.flatland.static_maps import straight_hirozontal_line_map
+from app.core.flatland.static_maps import straight_map
 from clingo.control import Control
 from clingo import Model
 from flatland.envs.line_generators import sparse_line_generator
@@ -14,7 +14,7 @@ from flatland.envs.rail_env import RailEnvActions
 
 
 def create_environment() -> RailEnv:
-    grid_transition_map, optionals = straight_hirozontal_line_map(
+    grid_transition_map, optionals = straight_map(
         length=5, padding=3)
     # grid_transition_map, optionals = example_basic_static_map()
 

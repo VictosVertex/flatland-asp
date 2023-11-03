@@ -5,7 +5,7 @@ from flatland.core.grid.rail_env_grid import RailEnvTransitions
 from flatland.core.transition_map import GridTransitionMap
 
 
-def straight_hirozontal_line_map(*, length: int, padding: int) -> Tuple[GridTransitionMap, dict[str, dict[str, Any]]]:
+def straight_map(*, length: int, padding: int) -> Tuple[GridTransitionMap, dict[str, dict[str, Any]]]:
     transitions = RailEnvTransitions()
     cell_types = transitions.transition_list
     empty = cell_types[0]
