@@ -10,8 +10,11 @@ class NaiveInstance:
         # Get all literals
         cell_literals = [self.get_cell_literal(cell) for cell in cells]
 
-        agent_literals = [self.get_agent_literal(agent) for agent in agents]
-        target_literals = [self.get_target_literal_for_agent(
+        agent_position_literals = [
+            self.get_agent_position_literal(agent) for agent in agents]
+        agent_orientation_literals = [
+            self.get_agent_orientation_literal(agent) for agent in agents]
+        agent_target_literals = [self.get_agent_target_literal(
             agent) for agent in agents]
         possible_action_literals = self.get_possible_action_literals(
             cell_types)
@@ -20,7 +23,6 @@ class NaiveInstance:
         if include_headers:
             cells_header = self.get_cells_header()
             agents_header = self.get_agents_header()
-            targets_header = self.get_targets_header()
             possible_actions_header = self.get_possible_actions_header()
 
         # Combine everything into one description
@@ -28,16 +30,17 @@ class NaiveInstance:
             full_description = [*cells_header,
                                 *cell_literals, "",
                                 *agents_header,
-                                *agent_literals, "",
-                                *targets_header,
-                                *target_literals, "",
+                                *agent_position_literals,
+                                *agent_orientation_literals,
+                                *agent_target_literals, "",
                                 *possible_actions_header,
                                 *possible_action_literals
                                 ]
         else:
             full_description = [*cell_literals, "",
-                                *agent_literals, "",
-                                *target_literals, "",
+                                *agent_position_literals,
+                                *agent_orientation_literals, "",
+                                *agent_target_literals, "",
                                 *possible_action_literals
                                 ]
 
@@ -113,37 +116,20 @@ class NaiveInstance:
 
     def get_agents_header(self) -> list[str]:
         header = inspect.cleandoc(
-            f"""% Agents are defined as
-                %   agent(I,X,Y,O,T).
+            f"""% Agents are defined in three literals
+                %   agent_position(I,X,Y,O,T).
                 %
                 %   - I: Id
                 %   - X: X coordinate of position
                 %   - Y: Y coordinate of position
+                %   - T: Time step, default is 0
+                %
+                %   agent_orientation(I,X,Y,O,T).
+                %
+                %   - I: Id
                 %   - O: Orientation
                 %   - T: Time step, default is 0
-            """
-        ).splitlines()
-
-        return header
-
-    def get_agent_literal(self, agent: Agent) -> str:
-        """ Get agent description as an ASP literal.
-
-            Form of the literal:
-                agent(I,X,Y,O,T).
-
-                - I: Id
-                - X: X coordinate of position
-                - Y: Y coordinate of position
-                - O: Orientation
-                - T: Time step, default is 0
-        """
-        return f'agent({agent.id},{agent.position.x},{agent.position.y},{agent.orientation.value},0).'
-
-    def get_targets_header(self) -> list[str]:
-        header = inspect.cleandoc(
-            f"""% Targets are defined as
-                %   target(I,X,Y).
+                %   agent_target(I,X,Y).
                 %
                 %   - I: Id of the agent
                 %   - X: X coordinate of target position
@@ -153,7 +139,32 @@ class NaiveInstance:
 
         return header
 
-    def get_target_literal_for_agent(self, agent: Agent) -> str:
+    def get_agent_position_literal(self, agent: Agent) -> str:
+        """ Get agent position description as an ASP literal.
+
+            Form of the literal:
+                agent(I,X,Y,T).
+
+                - I: Id
+                - X: X coordinate of position
+                - Y: Y coordinate of position
+                - T: Time step, default is 0
+        """
+        return f'agent_position({agent.id},{agent.position.x},{agent.position.y},0).'
+
+    def get_agent_orientation_literal(self, agent: Agent) -> str:
+        """ Get agent orientation description as an ASP literal.
+
+            Form of the literal:
+                agent_orientation(I,O,T).
+
+                - I: Id
+                - O: Orientation
+                - T: Time step, default is 0
+        """
+        return f'agent_orientation({agent.id},{agent.orientation.value},0).'
+
+    def get_agent_target_literal(self, agent: Agent) -> str:
         """ Get target description of an agent as an ASP literal.
 
             Form of the literal:
@@ -163,4 +174,4 @@ class NaiveInstance:
                 - X: x coordinate of target position
                 - Y: y coordinate of target position
         """
-        return f'target({agent.id},{agent.target.x},{agent.target.y}).'
+        return f'agent_target({agent.id},{agent.target.x},{agent.target.y}).'

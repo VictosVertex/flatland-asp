@@ -1,24 +1,21 @@
 import time
-import numpy as np
 from typing import Any, Tuple
 from app.core.asp.instance_descriptions.naive_instance import NaiveInstance
 from app.core.asp.instance_generator import InstanceGenerator
-from app.core.flatland.static_maps import example_basic_static_map, straight_hirozontal_line_map
+from app.core.flatland.static_maps import straight_hirozontal_line_map
 from clingo.control import Control
 from clingo import Model
-from flatland.core.grid.rail_env_grid import RailEnvTransitions
-from flatland.core.transition_map import GridTransitionMap
 from flatland.envs.line_generators import sparse_line_generator
 from flatland.envs.rail_env import RailEnv
 from flatland.envs.rail_generators import rail_from_grid_transition_map
-from flatland.utils.rendertools import RenderTool
+from flatland.utils.rendertools import RenderTool, AgentRenderVariant
 from flatland.envs.observations import GlobalObsForRailEnv
 from flatland.envs.rail_env import RailEnvActions
 
 
 def create_environment() -> RailEnv:
     grid_transition_map, optionals = straight_hirozontal_line_map(
-        length=5, padding=1)
+        length=5, padding=3)
     # grid_transition_map, optionals = example_basic_static_map()
 
     env = RailEnv(width=grid_transition_map.grid.shape[1],
@@ -35,13 +32,18 @@ def create_environment() -> RailEnv:
 
 def simulate_environment(env: RailEnv,
                          env_renderer: RenderTool,
-                         steps: int = 10,
+                         max_steps: int = 30,
                          step_delay: float = 0.5) -> None:
-    for _ in range(steps):
-        for handle in env.get_agent_handles():
-            env.step({handle: RailEnvActions.MOVE_FORWARD})
-        env_renderer.render_env(show=True, show_observations=True)
+
+    step = 0
+    while not env.dones[0] and step < max_steps:
+        for agent in env.agents:
+            env.step({agent.handle: RailEnvActions.MOVE_FORWARD})
+
+        env_renderer.render_env(
+            show=True, show_rowcols=True, show_predictions=True)
         time.sleep(step_delay)
+        step += 1
 
 
 def on_model(model: Model) -> None:
@@ -50,13 +52,27 @@ def on_model(model: Model) -> None:
         Args:
             model: Model that was found, which satisfies the provided instance/encoding
     """
-    print(f"{model}")
+    print(model)
+    x = model.symbols(shown=True)[0]
+    env.dev_pred_dict: dict[Any, list[Tuple[int, int]]] = {}
+    for symbol in model.symbols(shown=True):
+        if symbol.name == "agent_position":
+            id = symbol.arguments[0].number
+            x = symbol.arguments[1].number
+            y = symbol.arguments[2].number
+            print(f"Agent ID: {id} X: {x} Y: {y}")
+            handle = env.agents[id].handle
+            if handle in env.dev_pred_dict:
+                env.dev_pred_dict[handle].append((y, x))
+            else:
+                env.dev_pred_dict[handle] = [(y, x)]
 
+
+env = create_environment()
 
 if __name__ == '__main__':
-    env = create_environment()
-    env.reset()
 
+    env.reset()
     asp_generator = InstanceGenerator(instance_description=NaiveInstance())
     asp_generator.generate_instance_for_environment(env=env)
     asp_generator.store_instance('naive_test_instance')
@@ -73,14 +89,16 @@ if __name__ == '__main__':
 
     print(result)
 
-    render = False
+    render = True
 
     if render:
-        env_renderer = RenderTool(env)
-        env_renderer.render_env(show=True, show_observations=True)
+        env_renderer = RenderTool(
+            env, agent_render_variant=AgentRenderVariant.AGENT_SHOWS_OPTIONS)
 
         try:
             simulate_environment(env, env_renderer)
+            env_renderer.render_env(
+                show=True, show_predictions=True, show_rowcols=True)
         except Exception as e:
             print(
                 f"An exception occured which would otherwise have closed the rendering window.\n\n{e}\n")
