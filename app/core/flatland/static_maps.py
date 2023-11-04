@@ -134,3 +134,50 @@ def passing_siding_map() -> Tuple[GridTransitionMap, dict[str, dict[str, Any]]]:
 
     optionals = {'agents_hints': agents_hints}
     return grid_transition_map, optionals
+
+
+def multi_passing_siding_map() -> Tuple[GridTransitionMap, dict[str, dict[str, Any]]]:
+    transitions = RailEnvTransitions()
+    cell_types = transitions.transition_list
+    empty = cell_types[CellType.EMPTY.value]
+
+    sn_straight = cell_types[CellType.STRAIGHT.value]
+    we_straight = transitions.rotate_transition(sn_straight, 90)
+    se_turn = cell_types[CellType.SIMPLE_TURN_RIGHT.value]
+    ws_turn = transitions.rotate_transition(se_turn, 90)
+    sw_simple_switch = cell_types[CellType.SIMPLE_SWITCH.value]
+    en_simple_switch = transitions.rotate_transition(sw_simple_switch, 90)
+    se_simple_switch = cell_types[CellType.SIMPLE_SWITCH_MIRRORED.value]
+    wn_simple_switch = transitions.rotate_transition(se_simple_switch, 270)
+
+    grid = np.array(
+        [[empty] * (14)] +
+        [[empty]*5 + [se_turn] + [we_straight]*2 + [ws_turn] + [empty]*5] +
+        [[empty]*5 + [se_simple_switch] + [we_straight]*2 + [sw_simple_switch] + [empty]*5] +
+        [[empty]*5 + [se_simple_switch] + [we_straight]*2 + [sw_simple_switch] + [empty]*5] +
+        [[empty] + [we_straight]*4+[en_simple_switch] +
+            [we_straight]*2+[wn_simple_switch] + [we_straight]*4 + [empty]] +
+        [[empty] * (14)], dtype=np.uint16
+    )
+    print(grid)
+    grid_transition_map = GridTransitionMap(width=grid.shape[1],
+                                            height=grid.shape[0],
+                                            transitions=transitions)
+    grid_transition_map.grid = grid
+
+    city_positions = [(4, 1), (4, 12)]
+
+    city_orientations = [1, 3]
+
+    train_stations = [
+        [((4, 1), 0)],
+        [((4, 12), 0)],
+    ]
+
+    agents_hints = {'city_positions': city_positions,
+                    'train_stations': train_stations,
+                    'city_orientations': city_orientations
+                    }
+
+    optionals = {'agents_hints': agents_hints}
+    return grid_transition_map, optionals
