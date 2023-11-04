@@ -15,22 +15,22 @@
 
 % Update orientations
 %
-% If the halting action (3) is chosen
+% If the halting action (4) is chosen
 % keep the current orientation and advance time
-agent_orientation(I,O,T+1) :- agent_action(I,3,T), agent_orientation(I,O,T).
+agent_orientation(I,O,T+1) :- agent_action(I,4,T), agent_orientation(I,O,T).
 
 
 % If forward action is chosen given a straight track
 % simply keep the orientation the same and advance time
-agent_orientation(I,O,T+1) :- agent_action(I,0,T), 
+agent_orientation(I,O,T+1) :- agent_action(I,2,T), 
                             agent_position(I,X,Y,T),
                             agent_orientation(I,O,T),
                             cell(X,Y,1,_).
 % Update positions
 %
-% If the halting action (3) is chosen
+% If the halting action (4) is chosen
 % then don't change any coordinates, simply advance the time step.
-agent_position(I,X,Y,T+1) :- agent_action(I,3,T), agent_position(I,X,Y,T).
+agent_position(I,X,Y,T+1) :- agent_action(I,4,T), agent_position(I,X,Y,T).
 
 % If any other action is chosen
 % then move one step forward into orientation direction
@@ -38,7 +38,7 @@ agent_position(I,X,Y,T+1) :- agent_action(I,3,T), agent_position(I,X,Y,T).
 agent_position(I,X',Y',T+1) :-  agent_action(I,A,T),
                                 agent_orientation(I,O,T+1), 
                                 agent_position(I,X,Y,T),
-                                A != 3,
+                                A != 4,
                                 X'=X-(O - 2)* (O \ 2), 
                                 Y'=Y+(O - 1)* ((O+1) \ 2).
 

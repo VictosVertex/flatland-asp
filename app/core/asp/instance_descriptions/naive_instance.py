@@ -1,5 +1,6 @@
 import inspect
 from app.core.flatland.mappings import CELL_TYPE_TO_ACTION_MAP
+from app.core.flatland.schemas.action import Action
 from app.core.flatland.schemas.agent import Agent
 from app.core.flatland.schemas.cell import Cell
 from app.core.flatland.schemas.cell_type import CellType
@@ -105,7 +106,7 @@ class NaiveInstance:
             for agent_orientation, row in enumerate(actions):
                 # Halting is always possible
                 # for now we add it like this for every cell
-                possible_action = f"possible_action({cell_type.value}, {agent_orientation}, 3)."
+                possible_action = f"possible_action({cell_type.value}, {agent_orientation}, {Action.HALT.value})."
                 possible_actions.append(possible_action)
 
                 for action in row:
