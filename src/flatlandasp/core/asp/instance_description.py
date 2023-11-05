@@ -1,7 +1,7 @@
 from typing import Protocol
-from app.core.flatland.schemas.agent import Agent
-from app.core.flatland.schemas.cell import Cell
-from app.core.flatland.schemas.cell_type import CellType
+from flatlandasp.core.flatland.schemas.agent import Agent
+from flatlandasp.core.flatland.schemas.cell import Cell
+from flatlandasp.core.flatland.schemas.cell_type import CellType
 
 
 class InstanceDescription(Protocol):

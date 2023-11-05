@@ -1,6 +1,6 @@
-from app.core.flatland.schemas.cell_type import CellType
-from app.core.flatland.schemas.orientation import Orientation
-from app.core.flatland.schemas.position import Position
+from flatlandasp.core.flatland.schemas.cell_type import CellType
+from flatlandasp.core.flatland.schemas.orientation import Orientation
+from flatlandasp.core.flatland.schemas.position import Position
 from pydantic import BaseModel
 
 

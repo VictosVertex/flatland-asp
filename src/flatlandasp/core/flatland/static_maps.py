@@ -1,4 +1,4 @@
-from app.core.flatland.schemas.cell_type import CellType
+from flatlandasp.core.flatland.schemas.cell_type import CellType
 import numpy as np
 from typing import Any, Tuple
 from flatland.core.grid.rail_env_grid import RailEnvTransitions

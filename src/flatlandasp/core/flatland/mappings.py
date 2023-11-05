@@ -1,7 +1,7 @@
 from typing import Tuple
-from app.core.flatland.schemas.action import Action
-from app.core.flatland.schemas.cell_type import CellType
-from app.core.flatland.schemas.orientation import Orientation
+from flatlandasp.core.flatland.schemas.action import Action
+from flatlandasp.core.flatland.schemas.cell_type import CellType
+from flatlandasp.core.flatland.schemas.orientation import Orientation
 
 
 CELL_TYPE_TO_ACTION_MAP: dict[CellType, list[list[Action]]] = {

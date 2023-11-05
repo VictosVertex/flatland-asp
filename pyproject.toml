@@ -1,0 +1,4 @@
+[project]
+name = "flatlandasp"
+version = "0.1"
+dependencies = ["flatland-rl==4.0.1", "pydantic==2.4.2", "clingo==5.6.2"]

@@ -1,9 +1,9 @@
 import inspect
-from app.core.flatland.mappings import CELL_TYPE_TO_ACTION_MAP
-from app.core.flatland.schemas.action import Action
-from app.core.flatland.schemas.agent import Agent
-from app.core.flatland.schemas.cell import Cell
-from app.core.flatland.schemas.cell_type import CellType
+from flatlandasp.core.flatland.mappings import CELL_TYPE_TO_ACTION_MAP
+from flatlandasp.core.flatland.schemas.action import Action
+from flatlandasp.core.flatland.schemas.agent import Agent
+from flatlandasp.core.flatland.schemas.cell import Cell
+from flatlandasp.core.flatland.schemas.cell_type import CellType
 
 
 class NaiveInstance:
