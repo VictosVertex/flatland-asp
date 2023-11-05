@@ -127,7 +127,7 @@ agent_position(I,X',Y',T+1) :-  agent_action(I,A,T),
 agent_state(I,0,T) :- agent_position(I,X,Y,T), agent_target(I,X',Y'),(X-X')**2+(Y-Y')**2!=0.
 agent_state(I,1,T) :- agent_position(I,X,Y,T), agent_target(I,X,Y).
 
-% At time step greater than 4 the agent can not be at
+% At time step greater than the step limit, the agent can not be at
 % any position which is not the position of the target.
 :- agent_state(I,0,T),step_limit(L), T>(L-1).
 
@@ -139,8 +139,15 @@ agent_state(I,1,T) :- agent_position(I,X,Y,T), agent_target(I,X,Y).
     agent_position(I,X',Y',0),
     (X-X')**2+(Y-Y')**2!=0.
 
-:- agent_position(I,X,Y,T), agent_position(I',X,Y,T+1), I!=I',agent_position(I,X',Y',0),
-    (X-X')**2+(Y-Y')**2!=0.
+% Two agents can not swap places
+:-  agent_position(I,X,Y,T), 
+    agent_position(I',X',Y',T), 
+    agent_position(I,X',Y',T+1), 
+    agent_position(I',X,Y,T+1),
+    I != I'.
+
+%:- agent_position(I,X,Y,T), agent_position(I',X,Y,T+1), I!=I',agent_position(I,X',Y',0),
+%    (X-X')**2+(Y-Y')**2!=0.
 
 %:-  agent_position(I,X,Y,T), agent_position(I',X+1,Y,T), 
 %    agent_orientation(I,O,T), agent_orientation(I',O',T),O=(O'+2)\4, I!=I'.
