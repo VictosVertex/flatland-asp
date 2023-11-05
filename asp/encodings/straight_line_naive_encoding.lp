@@ -5,7 +5,7 @@
 % At each time step the agent has to choose one
 % action from all actions possible at the location
 % of the agent given its orientation and cell type.
-{agent_action(I,A,T):possible_action(C,F,A)} = 1:-  agent_position(I,X,Y,T), 
+{agent_action(I,A,T,OC):possible_action(C,F,A,OC)} = 1:-  agent_position(I,X,Y,T), 
                                                     agent_orientation(I,O,T), 
                                                     cell(X,Y,C,O'),
                                                     agent_state(I,0,T),
@@ -17,12 +17,13 @@
 %
 % If the halting action (4) is chosen
 % keep the current orientation and advance time
-agent_orientation(I,O,T+1) :- agent_action(I,4,T), agent_orientation(I,O,T).
+% Update orientations according to action taken and current orientation
+agent_orientation(I,O,T+1) :- agent_action(I,4,T,OC), agent_orientation(I,O,T).
 
 
 % If forward action is chosen given a straight track
 % simply keep the orientation the same and advance time
-agent_orientation(I,O,T+1) :- agent_action(I,2,T), 
+agent_orientation(I,O,T+1) :- agent_action(I,2,T,OC), 
                             agent_position(I,X,Y,T),
                             agent_orientation(I,O,T),
                             cell(X,Y,1,_).
@@ -30,12 +31,12 @@ agent_orientation(I,O,T+1) :- agent_action(I,2,T),
 %
 % If the halting action (4) is chosen
 % then don't change any coordinates, simply advance the time step.
-agent_position(I,X,Y,T+1) :- agent_action(I,4,T), agent_position(I,X,Y,T).
+agent_position(I,X,Y,T+1) :- agent_action(I,4,T,OC), agent_position(I,X,Y,T).
 
 % If any other action is chosen
 % then move one step forward into orientation direction
 % and advance time step
-agent_position(I,X',Y',T+1) :-  agent_action(I,A,T),
+agent_position(I,X',Y',T+1) :-  agent_action(I,A,T,OC),
                                 agent_orientation(I,O,T+1), 
                                 agent_position(I,X,Y,T),
                                 A != 4,
@@ -52,5 +53,5 @@ agent_state(I,1,T) :- agent_position(I,X,Y,T), agent_target(I,X',Y'),X-X'+Y-Y'==
 % any position which is not the position of the target.
 :- agent_state(I,0,T),step_limit(L), T>(L-1).
 
-#show agent_action/3.
+#show agent_action/4.
 #show agent_position/4.

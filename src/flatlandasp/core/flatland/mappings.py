@@ -1,71 +1,81 @@
 from typing import Tuple
+
 from flatlandasp.core.flatland.schemas.action import Action
 from flatlandasp.core.flatland.schemas.cell_type import CellType
-from flatlandasp.core.flatland.schemas.orientation import Orientation
+from flatlandasp.core.flatland.schemas.orientation import (Orientation,
+                                                           OrientationChange)
 
-
-CELL_TYPE_TO_ACTION_MAP: dict[CellType, list[list[Action]]] = {
+CELL_TYPE_TO_ACTION_MAP: dict[CellType, list[list[Action, OrientationChange]]] = {
 
     CellType.EMPTY: [[]],
     CellType.STRAIGHT: [
-        [Action.FORWARD],
+        [(Action.FORWARD, OrientationChange.KEEP)],
         [],
-        [Action.FORWARD],
+        [(Action.FORWARD, OrientationChange.KEEP)],
         []
     ],
     CellType.SIMPLE_SWITCH: [
-        [Action.FORWARD, Action.TURN_LEFT],
-        [Action.FORWARD],
-        [Action.FORWARD],
+        [(Action.FORWARD, OrientationChange.KEEP),
+         (Action.TURN_LEFT, OrientationChange.LEFT)],
+        [(Action.FORWARD, OrientationChange.RIGHT)],
+        [(Action.FORWARD, OrientationChange.KEEP)],
         []
     ],
     CellType.DIAMOND_CROSSING: [
-        [Action.FORWARD],
-        [Action.FORWARD],
-        [Action.FORWARD],
-        [Action.FORWARD]
+        [(Action.FORWARD, OrientationChange.KEEP)],
+        [(Action.FORWARD, OrientationChange.KEEP)],
+        [(Action.FORWARD, OrientationChange.KEEP)],
+        [(Action.FORWARD, OrientationChange.KEEP)]
     ],
     CellType.SINGLE_SLIP: [
-        [Action.FORWARD, Action.TURN_LEFT],
-        [Action.FORWARD, Action.TURN_RIGHT],
-        [Action.FORWARD],
-        [Action.FORWARD]
+        [(Action.FORWARD, OrientationChange.KEEP),
+         (Action.TURN_LEFT, OrientationChange.LEFT)],
+        [(Action.FORWARD, OrientationChange.KEEP),
+         (Action.TURN_RIGHT, OrientationChange.RIGHT)],
+        [(Action.FORWARD, OrientationChange.KEEP)],
+        [(Action.FORWARD, OrientationChange.KEEP)]
     ],
     CellType.DOUBLE_SLIP: [
-        [Action.FORWARD, Action.TURN_RIGHT],
-        [Action.FORWARD, Action.TURN_LEFT],
-        [Action.FORWARD, Action.TURN_RIGHT],
-        [Action.FORWARD, Action.TURN_LEFT]
+        [(Action.FORWARD, OrientationChange.KEEP),
+         (Action.TURN_RIGHT, OrientationChange.RIGHT)],
+        [(Action.FORWARD, OrientationChange.KEEP),
+         (Action.TURN_LEFT, OrientationChange.LEFT)],
+        [(Action.FORWARD, OrientationChange.KEEP),
+         (Action.TURN_RIGHT, OrientationChange.RIGHT)],
+        [(Action.FORWARD, OrientationChange.KEEP),
+         (Action.TURN_LEFT, OrientationChange.LEFT)]
     ],
     CellType.SYMMETRICAL: [
-        [Action.TURN_RIGHT, Action.TURN_LEFT],
-        [Action.FORWARD],
+        [(Action.TURN_RIGHT, OrientationChange.RIGHT),
+         (Action.TURN_LEFT, OrientationChange.LEFT)],
+        [(Action.FORWARD, OrientationChange.RIGHT)],
         [],
-        [Action.FORWARD]
+        [(Action.FORWARD, OrientationChange.LEFT)]
     ],
     CellType.DEAD_END: [
-        [Action.FORWARD],
+        [(Action.FORWARD, OrientationChange.TURN_AROUND)],
         [],
         [],
         []
     ],
     CellType.SIMPLE_TURN_RIGHT: [
-        [Action.FORWARD],
+        [(Action.FORWARD, OrientationChange.RIGHT)],
         [],
         [],
-        [Action.FORWARD]
+        [(Action.FORWARD, OrientationChange.LEFT)]
     ],
     CellType.SIMPLE_TURN_LEFT: [
-        [Action.FORWARD],
-        [Action.FORWARD],
+        [(Action.FORWARD, OrientationChange.LEFT)],
+        [(Action.FORWARD, OrientationChange.RIGHT)],
         [],
         []
     ],
     CellType.SIMPLE_SWITCH_MIRRORED: [
-        [Action.FORWARD, Action.TURN_RIGHT],
+        [(Action.FORWARD, OrientationChange.KEEP),
+         (Action.TURN_RIGHT, OrientationChange.RIGHT)],
         [],
-        [Action.FORWARD],
-        [Action.FORWARD]
+        [(Action.FORWARD, OrientationChange.KEEP)],
+        [(Action.FORWARD, OrientationChange.LEFT)]
     ],
 
 }

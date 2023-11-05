@@ -20,6 +20,12 @@ class FlatlandASP:
     def __init__(self, *, env: RailEnv, env_renderer: RenderTool, clingo_control: Control) -> None:
         self.env = env
         self.env.reset()
+
+        for index, agent in enumerate(self.env.agents):
+            # agent.earliest_departure = index*2
+            print(
+                f"agent: {index} should depart at: {agent.earliest_departure} state:{agent.state}")
+
         self.env_renderer = env_renderer
         self.clingo_control = clingo_control
         self.agent_actions = {}
@@ -33,7 +39,9 @@ class FlatlandASP:
             Args:
                 model: Model that was found, which satisfies the provided instance/encoding
         """
+
         for symbol in model.symbols(shown=True):
+            print(symbol)
             if symbol.name == "agent_action":
                 id = symbol.arguments[0].number
                 action = symbol.arguments[1].number
@@ -58,13 +66,15 @@ class FlatlandASP:
                 print(f"Agent {id} action count {len(l)}")
             while not self.env.dones["__all__"] and step < max_steps:
                 actionsdict = {}
+                print(f"Actions for step: {step}")
                 for idx, agent in enumerate(self.env.agents):
-                    if agent.position and not self.env.dones[idx]:
-                        if idx in agents_step:
-                            agents_step[idx] += 1
-                        else:
-                            agents_step[idx] = 0
-                        actionsdict[agent.handle] = self.agent_actions[idx][agents_step[idx]]
+                    if agent.position:
+                        if not self.env.dones[idx]:
+                            if idx in agents_step:
+                                agents_step[idx] += 1
+                            else:
+                                agents_step[idx] = 0
+                            actionsdict[agent.handle] = self.agent_actions[idx][agents_step[idx]]
                     else:
                         actionsdict[agent.handle] = RailEnvActions.MOVE_FORWARD
 
@@ -72,7 +82,8 @@ class FlatlandASP:
                         print(
                             f"Agent({idx}) is at {agent.position} and chose {Action(actionsdict[agent.handle])} at step {agents_step[idx]}/{len(self.agent_actions[idx])-1}.")
                     else:
-                        print(f"Agent({idx}) not spawned yet.")
+                        print(
+                            f"Agent({idx}) not spawned yet. {agent.state}")
 
                 self.env.step(actionsdict)
 
@@ -100,7 +111,7 @@ class FlatlandASP:
         asp_generator = InstanceGenerator(
             instance_description=instance_description)
         asp_generator.generate_instance_for_environment(
-            env=self.env, step_limit=35)
+            env=self.env, step_limit=20)
         asp_generator.store_instance('naive_test_instance')
 
         # Load instance from file

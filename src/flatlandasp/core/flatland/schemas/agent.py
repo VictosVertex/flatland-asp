@@ -1,6 +1,7 @@
+from pydantic import BaseModel
+
 from flatlandasp.core.flatland.schemas.orientation import Orientation
 from flatlandasp.core.flatland.schemas.position import Position
-from pydantic import BaseModel
 
 
 class Agent(BaseModel):
@@ -13,3 +14,5 @@ class Agent(BaseModel):
     """ Current orientation of the agent."""
     target: Position
     """ Position of the train station the agent needs to travel to."""
+    earliest_departure: int
+    """ Earliest time step at which the agent departs"""

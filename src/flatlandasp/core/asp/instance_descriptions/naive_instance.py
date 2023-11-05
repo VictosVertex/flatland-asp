@@ -1,9 +1,11 @@
 import inspect
+
 from flatlandasp.core.flatland.mappings import CELL_TYPE_TO_ACTION_MAP
 from flatlandasp.core.flatland.schemas.action import Action
 from flatlandasp.core.flatland.schemas.agent import Agent
 from flatlandasp.core.flatland.schemas.cell import Cell
 from flatlandasp.core.flatland.schemas.cell_type import CellType
+from flatlandasp.core.flatland.schemas.orientation import OrientationChange
 
 
 class NaiveInstance:
@@ -77,11 +79,12 @@ class NaiveInstance:
     def get_possible_actions_header(self) -> list[str]:
         header = inspect.cleandoc(
             f"""% Possible actions an agent can take in each cell are defined as
-                %   possible_action(C,O,A).
+                %   possible_action(C,O,A,OC).
                 %
                 %   - C: Type of cell
                 %   - O: Orientation of the agent entering the cell
                 %   - A: One of the actions the agent can choose
+                %   - OC: Change in orientation of the agent after taking action A
             """
         ).splitlines()
 
@@ -99,20 +102,18 @@ class NaiveInstance:
         """
 
         possible_actions = []
-        action_maps = []
         for cell_type in cell_types:
             actions = CELL_TYPE_TO_ACTION_MAP[cell_type]
 
             for agent_orientation, row in enumerate(actions):
                 # Halting is always possible
                 # for now we add it like this for every cell
-                possible_action = f"possible_action({cell_type.value}, {agent_orientation}, {Action.HALT.value})."
+                possible_action = f"possible_action({cell_type.value}, {agent_orientation}, {Action.HALT.value}, {OrientationChange.KEEP.value})."
                 possible_actions.append(possible_action)
 
                 for action in row:
-                    possible_action = f"possible_action({cell_type.value}, {agent_orientation}, {action.value})."
+                    possible_action = f"possible_action({cell_type.value}, {agent_orientation}, {action[0].value}, {action[1].value})."
                     possible_actions.append(possible_action)
-            # (4+i-cell.orientation.value) % 4
         return possible_actions
 
     def get_agents_header(self) -> list[str]:
@@ -151,7 +152,7 @@ class NaiveInstance:
                 - Y: Y coordinate of position
                 - T: Time step, default is 0
         """
-        return f'agent_position({agent.id},{agent.position.x},{agent.position.y},0).'
+        return f'agent_position({agent.id},{agent.position.x},{agent.position.y},{agent.earliest_departure}).'
 
     def get_agent_orientation_literal(self, agent: Agent) -> str:
         """ Get agent orientation description as an ASP literal.
@@ -163,7 +164,7 @@ class NaiveInstance:
                 - O: Orientation
                 - T: Time step, default is 0
         """
-        return f'agent_orientation({agent.id},{agent.orientation.value},0).'
+        return f'agent_orientation({agent.id},{agent.orientation.value},{agent.earliest_departure}).'
 
     def get_agent_target_literal(self, agent: Agent) -> str:
         """ Get target description of an agent as an ASP literal.

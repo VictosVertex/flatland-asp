@@ -70,7 +70,8 @@ class InstanceGenerator:
                     target=Position(
                         x=agent.target[1],
                         y=agent.target[0]
-                    )
+                    ),
+                    earliest_departure=agent.earliest_departure
                 )
             )
 
