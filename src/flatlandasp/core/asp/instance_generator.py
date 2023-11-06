@@ -5,6 +5,8 @@ from flatland.envs.rail_env import RailEnv
 
 from flatlandasp.core.asp.errors.instance_not_found_error import \
     InstanceNotFoundError
+from flatlandasp.core.asp.errors.rails_not_found_error import \
+    RailsNotFoundError
 from flatlandasp.core.asp.instance_description import InstanceDescription
 from flatlandasp.core.flatland.mappings import \
     CELL_ID_TO_TYPE_AND_ORIENTATON_MAP
@@ -29,7 +31,7 @@ class InstanceGenerator:
             f'step_limit({step_limit}).',
             *self.instance_description.get_full_description(
                 cells=cells,
-                cell_types=cell_types,
+                cell_types=list(cell_types),
                 agents=agents
             )
         ]
@@ -77,8 +79,11 @@ class InstanceGenerator:
 
         return agents
 
-    def _get_cells_and_types_from_environment(self, env: RailEnv, *, ignore_empty_cells: bool = True) -> Tuple[list[Cell], list[CellType]]:
-        cells = []
+    def _get_cells_and_types_from_environment(self, env: RailEnv, *, ignore_empty_cells: bool = True) -> Tuple[list[Cell], set[CellType]]:
+        if env.rail is None:
+            raise RailsNotFoundError()
+
+        cells: list[Cell] = []
         cell_types: set[CellType] = set()
         for y, row in enumerate(env.rail.grid):
             for x, column in enumerate(row):
