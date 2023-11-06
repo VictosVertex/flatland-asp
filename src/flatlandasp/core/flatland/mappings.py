@@ -5,7 +5,7 @@ from flatlandasp.core.flatland.schemas.cell_type import CellType
 from flatlandasp.core.flatland.schemas.orientation import (Orientation,
                                                            OrientationChange)
 
-CELL_TYPE_TO_ACTION_MAP: dict[CellType, list[list[Action, OrientationChange]]] = {
+CELL_TYPE_TO_ACTION_MAP: dict[CellType, list[list[Tuple[Action, OrientationChange]]]] = {
 
     CellType.EMPTY: [[]],
     CellType.STRAIGHT: [
