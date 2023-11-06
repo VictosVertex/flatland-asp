@@ -2,6 +2,10 @@
 % it is specifically for straight line maps, 
 % so it only contains rules for straight tracks.
 
+% Initial position of the agent
+agent_position(I,X,Y,0):- agent(I,X,Y,_,_).
+agent_orientation(I,O,0):- agent(I,_,_,O,_).
+
 % At each time step the agent has to choose one
 % action from all actions possible at the location
 % of the agent given its orientation and cell type.
@@ -10,7 +14,7 @@
                                                     cell(X,Y,C,O'),
                                                     agent_state(I,0,T),
                                                     step_limit(L),
-                                                    F=(4+O-O')\4, 
+                                                    F=(4+O-O')\4,
                                                     T<L.
 
 % Update orientations according to action taken and current orientation

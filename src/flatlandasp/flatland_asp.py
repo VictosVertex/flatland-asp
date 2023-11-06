@@ -5,12 +5,13 @@ from clingo import Model
 from clingo.control import Control
 from flatland.envs.rail_env import RailEnv, RailEnvActions
 from flatland.utils.rendertools import RenderTool
+from PIL import Image
 
-from flatlandasp.core.asp.instance_descriptions.naive_instance import \
-    NaiveInstance
+from flatlandasp.core.asp.instance_descriptions.base_instance import \
+    BaseInstance
 from flatlandasp.core.asp.instance_generator import InstanceGenerator
 from flatlandasp.core.flatland.schemas.action import Action
-from flatlandasp.core.utils.image_utils import get_image_bytes_from_np_array
+from flatlandasp.core.utils.image_utils import get_image_bytes_from_image
 
 
 class FlatlandASP:
@@ -97,15 +98,15 @@ class FlatlandASP:
                 f"An exception occured which would otherwise have closed the rendering window.\n\n{e}\n")
 
     def get_image_bytes(self):
-        image = self.env_renderer.render_env(
+        image_array = self.env_renderer.render_env(
             show_rowcols=True,
             show_predictions=True,
             return_image=True
         )
+        image = Image.fromarray(image_array)
+        return get_image_bytes_from_image(image)
 
-        return get_image_bytes_from_np_array(image)
-
-    def solve(self, instance_description=NaiveInstance()):
+    def solve(self, instance_description=BaseInstance()):
         self.env._max_episode_steps = 50
 
         asp_generator = InstanceGenerator(
