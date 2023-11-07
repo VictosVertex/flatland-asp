@@ -1,8 +1,10 @@
-from flatlandasp.core.flatland.schemas.cell_type import CellType
-import numpy as np
 from typing import Any, Tuple
+
+import numpy as np
 from flatland.core.grid.rail_env_grid import RailEnvTransitions
 from flatland.core.transition_map import GridTransitionMap
+
+from flatlandasp.core.flatland.schemas.cell_type import CellType
 
 
 def straight_map(*, length: int, padding: int) -> Tuple[GridTransitionMap, dict[str, dict[str, Any]]]:
@@ -172,6 +174,46 @@ def multi_passing_siding_map() -> Tuple[GridTransitionMap, dict[str, dict[str, A
     train_stations = [
         [((4, 1), 0)],
         [((4, 12), 0)],
+    ]
+
+    agents_hints = {'city_positions': city_positions,
+                    'train_stations': train_stations,
+                    'city_orientations': city_orientations
+                    }
+
+    optionals = {'agents_hints': agents_hints}
+    return grid_transition_map, optionals
+
+
+def simple_switch_map() -> Tuple[GridTransitionMap, dict[str, dict[str, Any]]]:
+    transitions = RailEnvTransitions()
+    cell_types = transitions.transition_list
+    empty = cell_types[CellType.EMPTY.value]
+
+    se_turn = cell_types[CellType.SIMPLE_TURN_RIGHT.value]
+    sw_simple_switch = cell_types[CellType.SIMPLE_SWITCH.value]
+    en_simple_switch = transitions.rotate_transition(sw_simple_switch, 90)
+    sn_dead_end = cell_types[CellType.DEAD_END.value]
+    we_dead_end = transitions.rotate_transition(sn_dead_end, 90)
+    ew_dead_end = transitions.rotate_transition(sn_dead_end, 270)
+
+    grid = np.array(
+        [[empty] + [se_turn] + [we_dead_end]] +
+        [[ew_dead_end] + [en_simple_switch] + [we_dead_end]], dtype=np.uint16
+    )
+    print(grid)
+    grid_transition_map = GridTransitionMap(width=grid.shape[1],
+                                            height=grid.shape[0],
+                                            transitions=transitions)
+    grid_transition_map.grid = grid
+
+    city_positions = [(1, 0), (1, 2)]
+
+    city_orientations = [1, 3]
+
+    train_stations = [
+        [((1, 0), 0)],
+        [((1, 2), 0)],
     ]
 
     agents_hints = {'city_positions': city_positions,
