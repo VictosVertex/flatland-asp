@@ -12,15 +12,17 @@ from flatlandasp.core.asp.instance_descriptions.base_instance import \
 from flatlandasp.core.asp.instance_generator import InstanceGenerator
 from flatlandasp.core.flatland.schemas.action import Action
 from flatlandasp.core.utils.image_utils import get_image_bytes_from_image
+from flatlandasp.flatland_asp_config import FlatlandASPConfig, get_config
 
 
 class FlatlandASP:
     """ Main class used to interact with Flatland ASP.
     """
 
-    def __init__(self, *, env: RailEnv, env_renderer: RenderTool, clingo_control: Control) -> None:
+    def __init__(self, *, env: RailEnv, env_renderer: RenderTool, clingo_control: Control, config: FlatlandASPConfig = get_config()) -> None:
         self.env = env
         self.env.reset()
+        self._config = config
 
         for index, agent in enumerate(self.env.agents):
             # agent.earliest_departure = index*2
@@ -113,13 +115,15 @@ class FlatlandASP:
             instance_description=instance_description)
         asp_generator.generate_instance_for_environment(
             env=self.env, step_limit=20)
-        asp_generator.store_instance('naive_test_instance')
+        asp_generator.store_instance(
+            self._config.asp_instances_path, 'naive_test_instance')
 
         # Load instance from file
-        self.clingo_control.load("asp/instances/naive_test_instance.lp")
+        self.clingo_control.load(
+            f"{self._config.asp_instances_path}naive_test_instance.lp")
         # Load encoding from file
         self.clingo_control.load(
-            "asp/encodings/passing_siding_naive_encoding.lp")
+            f"{self._config.asp_encodings_path}passing_siding_naive_encoding.lp")
         # Ground the program
         self.clingo_control.ground()
         # ctl.configuration.solve.models = 5

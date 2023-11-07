@@ -49,14 +49,14 @@ class InstanceGenerator:
         ).splitlines()
         return header
 
-    def store_instance(self, instance_name: str):
+    def store_instance(self, path, instance_name: str):
         if self.instance is None:
             raise InstanceNotFoundError()
 
         lines = [*self.generate_instance_header(), *self.instance]
 
         write_lines_to_file_in_output(
-            path='asp/instances/', file_name=f'{instance_name}.lp', lines=lines)
+            path=path, file_name=f'{instance_name}.lp', lines=lines)
 
     def _get_agents_from_environment(self, env: RailEnv) -> list[Agent]:
         agents = []

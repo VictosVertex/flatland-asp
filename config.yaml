@@ -1,0 +1,3 @@
+flatland_asp_config: !config
+  asp_encodings_path: 'asp/encodings/'
+  asp_instances_path: 'asp/instances/'
