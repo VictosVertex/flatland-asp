@@ -1,3 +1,4 @@
+import copy
 import time
 from typing import Any, Tuple
 
@@ -35,6 +36,7 @@ class FlatlandASP:
         """ Actions each agent is supposed to make."""
         self.agent_paths: dict[Any, list[Tuple[int, int]]] = {}
         """ Path for each agent resulting from the given actions."""
+        self.agents_at_step = {}
 
     def _on_clingo_model(self, model: Model):
         """ Populate FlatlandASP with data based on model.
@@ -90,14 +92,23 @@ class FlatlandASP:
 
                 self.env.step(actionsdict)
 
-                self.env_renderer.render_env(show=True,
-                                             return_image=True, show_rowcols=True, show_predictions=True, step=0)
+                self.agents_at_step[step] = copy.deepcopy(self.env.agents)
+
+                # self.env_renderer.render_env(show=True,
+                #                             return_image=True, show_rowcols=True, show_predictions=True, step=0)
 
                 time.sleep(step_delay)
                 step += 1
         except Exception as e:
             print(
                 f"An exception occured which would otherwise have closed the rendering window.\n\n{e}\n")
+
+    def get_image_bytes_at_simulation_step(self, step: int = 0):
+        old_agents = self.env.agents
+        self.env.agents = self.agents_at_step[step]
+        image_bytes = self.get_image_bytes()
+        self.env.agents = old_agents
+        return image_bytes
 
     def get_image_bytes(self):
         image_array = self.env_renderer.render_env(
