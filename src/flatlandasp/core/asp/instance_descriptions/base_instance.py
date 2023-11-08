@@ -131,7 +131,7 @@ class BaseInstance:
                 %   - X: X coordinate of position
                 %   - Y: Y coordinate of position
                 %   - O: Orientation
-                %   - D: Latest departure
+                %   - D: Earliest departure
                 %
                 %   agent_target(I,X,Y).
                 %
@@ -153,7 +153,7 @@ class BaseInstance:
                 - X: X coordinate of position
                 - Y: Y coordinate of position
                 - O: Orientation
-                - D: Latest departure
+                - D: Earliest departure
         """
         return f'agent({agent.id},{agent.position.x},{agent.position.y},{agent.orientation.value},{agent.earliest_departure}).'
 
