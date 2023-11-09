@@ -59,6 +59,5 @@ agent_done(I,T) :- agent_position(I,X,Y,T), agent_target(I,X,Y).
 
 #show agent_action/4.
 #show agent_position/4.
-#show agent_state/3.
 #show agent_orientation/3.
 #show agent_target/3.
