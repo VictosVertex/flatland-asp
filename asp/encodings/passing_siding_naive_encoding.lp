@@ -57,7 +57,13 @@ agent_done(I,T) :- agent_position(I,X,Y,T), agent_target(I,X,Y).
     agent_position(I',X,Y,T+1),
     I != I'.
 
+all_done(T):- T = #sum{T',I:agent_done(I,T')}.
+
+#minimize {T:all_done(T)}.
+
 #show agent_action/4.
 #show agent_position/4.
 #show agent_orientation/3.
 #show agent_target/3.
+#show agent_done/2.
+#show all_done/1.
