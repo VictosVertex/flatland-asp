@@ -1,0 +1,13 @@
+<html>
+  <head>
+    <title>Image rendering test</title>
+  </head>
+  <body>
+    {% if img %}
+    <h1>Rendered Image</h1>
+    <img src="data:image/jpeg;base64,{{ img }}" />
+    {% else %}
+    <h1>Image will be render here...</h1>
+    {% endif %}
+  </body>
+</html>
