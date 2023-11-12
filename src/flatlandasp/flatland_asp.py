@@ -2,7 +2,7 @@ import copy
 import time
 from typing import Any, Tuple
 
-from clingo import Model
+from clingo import Model, SolveResult
 from clingo.control import Control
 from flatland.envs.rail_env import RailEnv, RailEnvActions
 from flatland.utils.rendertools import RenderTool
@@ -37,6 +37,7 @@ class FlatlandASP:
         self.agent_paths: dict[Any, list[Tuple[int, int]]] = {}
         """ Path for each agent resulting from the given actions."""
         self.agents_at_step = {}
+        self.symbols = 10000
 
     def _on_clingo_model(self, model: Model):
         """ Populate FlatlandASP with data based on model.
@@ -44,8 +45,17 @@ class FlatlandASP:
             Args:
                 model: Model that was found, which satisfies the provided instance/encoding
         """
+        symbols = model.symbols(shown=True)
+        if len(symbols) < self.symbols:
+            print(
+                f"----------------------- SHORTER MODEL FOUND {self.symbols} > {len(symbols)}")
+            self.symbols = len(symbols)
+            self.agent_actions = {}
+        else:
+            print("----------------------- SKIPPED")
+            return
 
-        for symbol in model.symbols(shown=True):
+        for symbol in symbols:
             print(symbol)
             if symbol.name == "agent_action":
                 id = symbol.arguments[0].number
@@ -94,8 +104,8 @@ class FlatlandASP:
 
                 self.agents_at_step[step] = copy.deepcopy(self.env.agents)
 
-                # self.env_renderer.render_env(show=True,
-                #                             return_image=True, show_rowcols=True, show_predictions=True, step=0)
+                self.env_renderer.render_env(show=True,
+                                             return_image=True, show_rowcols=True, show_predictions=True, step=0)
 
                 time.sleep(step_delay)
                 step += 1
@@ -137,6 +147,6 @@ class FlatlandASP:
             f"{self._config.asp_encodings_path}passing_siding_naive_encoding.lp")
         # Ground the program
         self.clingo_control.ground()
-        # ctl.configuration.solve.models = 5
+
         self.clingo_control.solve(
             on_model=lambda x: self._on_clingo_model(x))
