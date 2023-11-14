@@ -107,19 +107,17 @@ class BaseInstance:
                 - OC: Change in orientation of the agent after taking action A
         """
 
-        possible_actions = []
-        for cell_type in cell_types:
-            actions = CELL_TYPE_TO_ACTION_MAP[cell_type]
-
-            for agent_orientation, row in enumerate(actions):
-                # Halting is always possible
-                # for now we add it like this for every cell
-                possible_action = f"possible_action({cell_type.value},{agent_orientation},{Action.HALT.value},{OrientationChange.KEEP.value})."
-                possible_actions.append(possible_action)
-
-                for action in row:
-                    possible_action = f"possible_action({cell_type.value},{agent_orientation},{action[0].value},{action[1].value})."
-                    possible_actions.append(possible_action)
+        possible_actions = [
+            (f'possible_action({cell_type.value}'
+             f',{agent_orientation}'
+             f',{action[0].value}'
+             f',{action[1].value}).')
+            for cell_type in cell_types
+            for agent_orientation, row in enumerate(CELL_TYPE_TO_ACTION_MAP[cell_type])
+            # Halting is always possible
+            # for now we add it like this for every cell
+            for action in row + [(Action.HALT, OrientationChange.KEEP)]
+        ]
         return possible_actions
 
     def get_agents_header(self) -> list[str]:
@@ -155,13 +153,17 @@ class BaseInstance:
                 - O: Orientation
                 - D: Earliest departure
         """
-        return f'agent({agent.id},{agent.position.x},{agent.position.y},{agent.orientation.value},{agent.earliest_departure}).'
+        return (f'agent({agent.id}'
+                f',{agent.position.x}'
+                f',{agent.position.y}'
+                f',{agent.orientation.value}'
+                f',{agent.earliest_departure}).')
 
     def get_agent_target_literal(self, agent: Agent) -> str:
         """ Get target description of an agent as an ASP literal.
 
             Form of the literal:
-                target(I,X,Y).
+                agent_target(I,X,Y).
 
                 - I: Id of the agent
                 - X: x coordinate of target position
