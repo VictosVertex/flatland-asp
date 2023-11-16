@@ -2,10 +2,13 @@ import json
 from typing import Any
 
 import numpy as np
+from flatland.envs.persistence import RailEnvPersister
+from flatland.envs.rail_env import RailEnv
 
 from flatlandasp.core.utils.file_utils import create_path_if_not_exist
 from flatlandasp.features.environments.schemas.environment_data_schema import \
     EnvironmentData
+from flatlandasp.flatland_asp_config import get_config
 
 
 class TupleEncoder(json.JSONEncoder):
@@ -48,9 +51,10 @@ def tuple_hook(object: Any):
 
 
 def create_data_as_json_file(*,
-                             path: str,
                              file_name: str,
-                             environment_data: EnvironmentData) -> None:
+                             environment_data: EnvironmentData,
+                             path: str = get_config().flatland_environments_path
+                             ) -> None:
 
     create_path_if_not_exist(path=path)
 
@@ -58,9 +62,27 @@ def create_data_as_json_file(*,
         f.write(json.dumps(environment_data.dict(), indent=4, cls=TupleEncoder))
 
 
-def read_data_from_json_file(*,
-                             path: str,
-                             file_name) -> EnvironmentData:
+def read_data_from_json_file(*, file_name: str,
+                             path: str = get_config().flatland_environments_path,
+                             ) -> EnvironmentData:
+
     with open(f'{path}{file_name}', 'r') as f:
         data = json.load(f, object_hook=tuple_hook)
         return EnvironmentData(**data)
+
+
+def create_as_pickle_file(file_name: str,
+                          env: RailEnv,
+                          path: str = get_config().flatland_environments_path):
+
+    create_path_if_not_exist(path=path)
+
+    RailEnvPersister.save(env=env, filename=f'{path}{file_name}')
+
+
+def read_from_pickle_file(file_name: str,
+                          path: str = get_config().flatland_environments_path) -> RailEnv:
+
+    env, _ = RailEnvPersister.load_new(filename=f'{path}{file_name}')
+
+    return env
