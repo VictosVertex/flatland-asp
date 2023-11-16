@@ -1,6 +1,8 @@
 import json
 from typing import Any
 
+import numpy as np
+
 from flatlandasp.core.utils.file_utils import create_path_if_not_exist
 from flatlandasp.features.environments.schemas.environment_data_schema import \
     EnvironmentData
@@ -28,11 +30,19 @@ class TupleEncoder(json.JSONEncoder):
 
         return super(TupleEncoder, self).encode(recursion(object))
 
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return super().default(obj)
+
 
 def tuple_hook(object: Any):
     """ Turn tuple dictionaries back into actual tuples."""
     if '__tuple__' in object:
         return tuple(object['__tuple__'])
+
+    if 'grid' in object:
+        object['grid'] = np.array(object['grid'])
 
     return object
 
