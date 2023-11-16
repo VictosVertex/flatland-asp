@@ -49,20 +49,13 @@ def tuple_hook(object: Any):
 
 def create_data_as_json_file(*,
                              path: str,
-                             file_name,
-                             grid,
-                             optionals,
-                             number_of_agents) -> None:
+                             file_name: str,
+                             environment_data: EnvironmentData) -> None:
 
     create_path_if_not_exist(path=path)
 
-    data = {
-        "grid": grid,
-        "optionals": optionals,
-        "number_of_agents": number_of_agents
-    }
     with open(f'{path}{file_name}', 'w') as f:
-        f.write(json.dumps(data, indent=4, cls=TupleEncoder))
+        f.write(json.dumps(environment_data.dict(), indent=4, cls=TupleEncoder))
 
 
 def read_data_from_json_file(*,
