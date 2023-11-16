@@ -1,3 +1,5 @@
+from typing import Any
+
 import numpy as np
 from pydantic import BaseModel, validator
 
@@ -19,8 +21,8 @@ CITY_ORIENTATIONS_TYPE = list[int]
 
 class EnvironmentData(BaseModel):
     """ Holds data required for creating a specific environment."""
-    grid: list[list[int]]
-    """ Environment grid in form of a numpy array."""
+    grid: np.ndarray
+    """ Environment grid as list of list of transition maps (16bit values)"""
     optionals: dict[
         str,
         dict[
@@ -42,3 +44,12 @@ class EnvironmentData(BaseModel):
             grid still can't use proper type hints
         """
         return np.array(v)
+
+    def dict(self, *args: Any, **kwargs: Any) -> dict[str, Any]:
+        """ Return EnvironmentData as dict with grid as list instead of ndarray."""
+        serialized = super().dict(*args, **kwargs)
+        serialized["grid"] = serialized["grid"].tolist()
+        return serialized
+
+    class Config:
+        arbitrary_types_allowed = True
