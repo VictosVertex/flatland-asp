@@ -2,6 +2,8 @@ import json
 from typing import Any
 
 import numpy as np
+from flatland.envs.persistence import RailEnvPersister
+from flatland.envs.rail_env import RailEnv
 
 from flatlandasp.core.utils.file_utils import create_path_if_not_exist
 from flatlandasp.features.environments.schemas.environment_data_schema import \
@@ -67,3 +69,20 @@ def read_data_from_json_file(*, file_name: str,
     with open(f'{path}{file_name}', 'r') as f:
         data = json.load(f, object_hook=tuple_hook)
         return EnvironmentData(**data)
+
+
+def create_as_pickle_file(file_name: str,
+                          env: RailEnv,
+                          path: str = get_config().flatland_environments_path):
+
+    create_path_if_not_exist(path=path)
+
+    RailEnvPersister.save(env=env, filename=f'{path}{file_name}')
+
+
+def read_from_pickle_file(file_name: str,
+                          path: str = get_config().flatland_environments_path) -> RailEnv:
+
+    env, _ = RailEnvPersister.load_new(filename=f'{path}{file_name}')
+
+    return env
