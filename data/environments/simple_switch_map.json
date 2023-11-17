@@ -1,0 +1,65 @@
+{
+    "grid": [
+        [
+            0,
+            16386,
+            256
+        ],
+        [
+            4,
+            3089,
+            256
+        ]
+    ],
+    "optionals": {
+        "agents_hints": {
+            "city_positions": [
+                {
+                    "__tuple__": [
+                        1,
+                        0
+                    ]
+                },
+                {
+                    "__tuple__": [
+                        1,
+                        2
+                    ]
+                }
+            ],
+            "train_stations": [
+                [
+                    {
+                        "__tuple__": [
+                            {
+                                "__tuple__": [
+                                    1,
+                                    0
+                                ]
+                            },
+                            0
+                        ]
+                    }
+                ],
+                [
+                    {
+                        "__tuple__": [
+                            {
+                                "__tuple__": [
+                                    1,
+                                    2
+                                ]
+                            },
+                            0
+                        ]
+                    }
+                ]
+            ],
+            "city_orientations": [
+                1,
+                3
+            ]
+        }
+    },
+    "number_of_agents": 2
+}
