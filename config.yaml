@@ -1,3 +1,4 @@
 flatland_asp_config: !config
-  asp_encodings_path: 'asp/encodings/'
-  asp_instances_path: 'asp/instances/'
+  asp_encodings_path: 'data/encodings/'
+  asp_instances_path: 'data/instances/'
+  flatland_environments_path: 'data/environments/'
