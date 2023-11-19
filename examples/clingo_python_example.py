@@ -2,8 +2,8 @@
     This is a basic example of how to run clingo from python
     
 """
-from clingo.control import Control
 from clingo import Model
+from clingo.control import Control
 
 
 def on_model(model: Model) -> None:

@@ -1,7 +1,6 @@
-from pydantic import BaseModel
-
 from flatlandasp.core.flatland.schemas.orientation import Orientation
 from flatlandasp.core.flatland.schemas.position import Position
+from pydantic import BaseModel
 
 
 class Agent(BaseModel):

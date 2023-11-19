@@ -2,8 +2,7 @@ from typing import Tuple
 
 from flatlandasp.core.flatland.schemas.action import Action
 from flatlandasp.core.flatland.schemas.cell_type import CellType
-from flatlandasp.core.flatland.schemas.orientation import (Orientation,
-                                                           OrientationChange)
+from flatlandasp.core.flatland.schemas.orientation import Orientation, OrientationChange
 
 CELL_TYPE_TO_ACTION_MAP: dict[CellType, list[list[Tuple[Action, OrientationChange]]]] = {
 
