@@ -1,4 +1,5 @@
 from typing import Protocol
+
 from flatlandasp.core.flatland.schemas.agent import Agent
 from flatlandasp.core.flatland.schemas.cell import Cell
 from flatlandasp.core.flatland.schemas.cell_type import CellType

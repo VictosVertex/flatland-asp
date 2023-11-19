@@ -50,7 +50,7 @@ class BaseInstance:
 
     def get_cells_header(self) -> list[str]:
         """ Get header describing how cells are defined."""
-        header = inspect.cleandoc(
+        return inspect.cleandoc(
             f"""% Cells are defined as
                 %   cell(X,Y,C,O).
                 %  
@@ -60,8 +60,6 @@ class BaseInstance:
                 %   - O: Orientation
             """
         ).splitlines()
-
-        return header
 
     def get_cell_literal(self, cell: Cell) -> str:
         """ Get cell description as an ASP literal.
@@ -82,7 +80,7 @@ class BaseInstance:
 
     def get_possible_actions_header(self) -> list[str]:
         """ Get header describing how possible actions are defined."""
-        header = inspect.cleandoc(
+        return inspect.cleandoc(
             f"""% Possible actions an agent can take in each cell are defined as
                 %   possible_action(C,O,A,OC).
                 %
@@ -92,8 +90,6 @@ class BaseInstance:
                 %   - OC: Change in orientation of the agent after taking action A
             """
         ).splitlines()
-
-        return header
 
     def get_possible_action_literals(self, cell_types: list[CellType]) -> list[str]:
         """ Get all possible action descriptions for all cells as ASP literals.
@@ -107,7 +103,7 @@ class BaseInstance:
                 - OC: Change in orientation of the agent after taking action A
         """
 
-        possible_actions = [
+        return [
             (f'possible_action({cell_type.value}'
              f',{agent_orientation}'
              f',{action[0].value}'
@@ -116,12 +112,11 @@ class BaseInstance:
             for agent_orientation, row in enumerate(CELL_TYPE_TO_ACTION_MAP[cell_type])
             # Halting is always possible
             # for now we add it like this for every cell
-            for action in row + [(Action.HALT, OrientationChange.KEEP)]
+            for action in [*row, (Action.HALT, OrientationChange.KEEP)]
         ]
-        return possible_actions
 
     def get_agents_header(self) -> list[str]:
-        header = inspect.cleandoc(
+        return inspect.cleandoc(
             f"""% Agent's initial values are defined in three literals
                 %   agent(I,X,Y,O,D).
                 %
@@ -138,8 +133,6 @@ class BaseInstance:
                 %   - Y: Y coordinate of target position
             """
         ).splitlines()
-
-        return header
 
     def get_agent_literal(self, agent: Agent) -> str:
         """ Get agent description as an ASP literal.

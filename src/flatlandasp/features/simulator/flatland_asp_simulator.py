@@ -1,6 +1,5 @@
 import copy
 import time
-from typing import Any, Tuple
 
 from flatland.envs.rail_env import RailEnv, RailEnvActions
 from flatland.utils.rendertools import RenderTool

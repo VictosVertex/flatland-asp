@@ -16,15 +16,13 @@ import time
 from typing import Any, Tuple
 
 import numpy as np
-
 from flatland.core.grid.rail_env_grid import RailEnvTransitions
 from flatland.core.transition_map import GridTransitionMap
 from flatland.envs.line_generators import sparse_line_generator
-from flatland.envs.rail_env import RailEnv
+from flatland.envs.observations import GlobalObsForRailEnv
+from flatland.envs.rail_env import RailEnv, RailEnvActions
 from flatland.envs.rail_generators import rail_from_grid_transition_map
 from flatland.utils.rendertools import RenderTool
-from flatland.envs.observations import GlobalObsForRailEnv
-from flatland.envs.rail_env import RailEnvActions
 
 
 def basic_static_map() -> Tuple[GridTransitionMap, dict[str, dict[str, Any]]]:
@@ -147,16 +145,14 @@ def create_environment() -> RailEnv:
     #
     # The number of agents describes how many trains try to traverse from their starting
     # location to their target location
-    env = RailEnv(width=grid_transition_map.grid.shape[1],
-                  height=grid_transition_map.grid.shape[0],
-                  rail_generator=rail_from_grid_transition_map(
-                      grid_transition_map, optionals),
-                  line_generator=sparse_line_generator(),
-                  number_of_agents=2,
-                  obs_builder_object=GlobalObsForRailEnv(),
-                  )
-
-    return env
+    return RailEnv(width=grid_transition_map.grid.shape[1],
+                   height=grid_transition_map.grid.shape[0],
+                   rail_generator=rail_from_grid_transition_map(
+        grid_transition_map, optionals),
+        line_generator=sparse_line_generator(),
+        number_of_agents=2,
+        obs_builder_object=GlobalObsForRailEnv(),
+    )
 
 
 def simulate_environment(env: RailEnv,

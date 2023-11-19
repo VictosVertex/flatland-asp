@@ -6,8 +6,9 @@ from flatland.envs.rail_generators import rail_from_grid_transition_map
 
 from flatlandasp.core.flatland.static_maps import multi_passing_siding_map
 from flatlandasp.features.environments import environment_crud
-from flatlandasp.features.environments.schemas.environment_data_schema import \
-    EnvironmentData
+from flatlandasp.features.environments.schemas.environment_data_schema import (
+    EnvironmentData,
+)
 
 router = APIRouter()
 
