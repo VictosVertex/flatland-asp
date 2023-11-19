@@ -2,14 +2,14 @@ import json
 from typing import Any
 
 import numpy as np
-from flatland.envs.persistence import RailEnvPersister
-from flatland.envs.rail_env import RailEnv
-
-from flatlandasp.core.utils.file_utils import create_path_if_not_exist
-from flatlandasp.features.environments.schemas.environment_data_schema import (
+from flatlandasp.core.flatland.schemas.environment_data_schema import (
     EnvironmentData,
 )
+from flatlandasp.core.utils.file_utils import create_path_if_not_exist
 from flatlandasp.flatland_asp_config import get_config
+
+from flatland.envs.persistence import RailEnvPersister
+from flatland.envs.rail_env import RailEnv
 
 
 class TupleEncoder(json.JSONEncoder):
