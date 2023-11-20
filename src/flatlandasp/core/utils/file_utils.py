@@ -13,3 +13,7 @@ def write_lines_to_file_in_output(*, path: str, file_name: str, lines: list[str]
 
     with open(f'{path}/{file_name}', 'w') as f:
         f.writelines(line + '\n' for line in lines)
+
+
+def get_file_names_in_path(*, path: str) -> list[str]:
+    return [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
