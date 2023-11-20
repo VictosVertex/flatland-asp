@@ -8,6 +8,7 @@ class FlatlandASPConfig(yaml.YAMLObject):
     asp_encodings_path: str
     asp_instances_path: str
     flatland_environments_path: str
+    solver_output_path: str
 
     yaml_tag: str = '!config'
     yaml_loader = yaml.SafeLoader
