@@ -2,3 +2,4 @@ flatland_asp_config: !config
   asp_encodings_path: 'data/encodings/'
   asp_instances_path: 'data/instances/'
   flatland_environments_path: 'data/environments/'
+  solver_output_path: 'data/solutions/'
