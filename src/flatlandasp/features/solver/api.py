@@ -52,6 +52,8 @@ def solve(input: SolverInput):
             environment = get_environment_from_json(
                 f'{input.environment_name}.json', input.number_of_agents)
 
+        environment.reset()
+
         cling_control = Control()
 
         instance_generator = InstanceGenerator(
