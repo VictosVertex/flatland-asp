@@ -19,7 +19,6 @@ class FlatlandASPSolver:
                  logger: Logger,
                  config: FlatlandASPConfig = get_config()) -> None:
         self.environment = environment
-        self.environment.reset()
         self._logger = logger
 
         self.instance_generator = instance_generator

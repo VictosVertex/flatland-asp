@@ -16,7 +16,6 @@ class FlatlandASPSimulator:
                  env_renderer: RenderTool,
                  config: FlatlandASPConfig = get_config()) -> None:
         self.env = env
-        self.env.reset()
         self._config = config
 
         for index, agent in enumerate(self.env.agents):
