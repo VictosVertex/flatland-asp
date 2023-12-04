@@ -14,6 +14,6 @@ flasp = "flatlandasp.main:main"
 
 [tool.ruff]
 extend-select = ["C4","SIM","TCH", "I", "N", "B", "BLE", "ERA", "ICN", "RET", "RSE", "RUF", "S", "T20", "TID"]
-ignore = ["S101", "B008", "B905", "F541"]
+ignore = ["S101", "B008", "B905", "F541", "RUF012"]
 show-fixes = true
 target-version = "py310"
