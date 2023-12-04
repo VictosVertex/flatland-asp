@@ -33,6 +33,10 @@ class FlatlandASPSimulator:
                              render: bool = False) -> None:
 
         try:
+            # Set Flatland horizon,
+            # this should be similar to the ASP horizon
+            self.env._max_episode_steps = max_steps
+
             step = 0
             agents_step = {}
             for id, l in agent_actions.items():
