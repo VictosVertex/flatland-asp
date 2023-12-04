@@ -1,16 +1,11 @@
-from flatlandasp.core.flatland.schemas.orientation import Orientation
 from flatlandasp.core.flatland.schemas.position import Position
-from pydantic import BaseModel
+from flatlandasp.core.flatland.schemas.unit import Unit
 
 
-class Agent(BaseModel):
+class Agent(Unit):
     """ Representation of a train."""
     id: int
     """ Unique identifier of the agent."""
-    position: Position
-    """ Current position of the agent."""
-    orientation: Orientation
-    """ Current orientation of the agent."""
     target: Position
     """ Position of the train station the agent needs to travel to."""
     earliest_departure: int

@@ -126,3 +126,17 @@ CELL_ID_TO_TYPE_AND_ORIENTATON_MAP: dict[int, Tuple[CellType, Orientation]] = {
     34864: (CellType.SIMPLE_SWITCH_MIRRORED, Orientation.SOUTH),
     1097: (CellType.SIMPLE_SWITCH_MIRRORED, Orientation.WEST),
 }
+
+CELL_TYPE_TO_BASE_CELL_ID = {
+    CellType.EMPTY: 0,
+    CellType.STRAIGHT: 32800,
+    CellType.SIMPLE_SWITCH: 37408,
+    CellType.DIAMOND_CROSSING: 33825,
+    CellType.SINGLE_SLIP: 38433,
+    CellType.DOUBLE_SLIP: 52275,
+    CellType.SYMMETRICAL: 20994,
+    CellType.DEAD_END: 8192,
+    CellType.SIMPLE_TURN_RIGHT: 16386,
+    CellType.SIMPLE_TURN_LEFT: 4608,
+    CellType.SIMPLE_SWITCH_MIRRORED: 49186,
+}
