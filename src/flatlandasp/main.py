@@ -1,14 +1,11 @@
-import logging
-from logging.config import dictConfig
-
 import uvicorn
 from fastapi import FastAPI
 
-from flatlandasp.core.log_config import LogConfig
+from flatlandasp.core.log_config import get_logger
 from flatlandasp.features.router import router as feature_router
 
-dictConfig(LogConfig().dict())
-logger = logging.getLogger("uvicorn.error")
+logger = get_logger()
+
 app = FastAPI(title="FlatlandASP", version="0.01")
 app.include_router(feature_router)
 

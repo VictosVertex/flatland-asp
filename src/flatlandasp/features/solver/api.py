@@ -12,12 +12,13 @@ from flatland.envs.rail_generators import rail_from_grid_transition_map
 from flatlandasp.core.asp.instance_descriptions.base_instance import BaseInstance
 from flatlandasp.core.asp.instance_generator import InstanceGenerator
 from flatlandasp.core.flatland import environment_crud
+from flatlandasp.core.log_config import get_logger
 from flatlandasp.features.solver.flatland_asp_solver import FlatlandASPSolver
 from flatlandasp.features.solver.schemas.solver_input_schema import SolverInput
 
 router = APIRouter()
 
-logger = logging.getLogger("solver.api")
+logger = get_logger()
 
 
 def get_environment_from_json(file_name: str, number_of_agents: int):
