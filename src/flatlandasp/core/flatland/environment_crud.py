@@ -1,5 +1,5 @@
 import json
-from typing import Any
+from typing import Any, Optional
 
 import numpy as np
 from flatlandasp.core.flatland.schemas.environment_data_schema import (
@@ -8,8 +8,13 @@ from flatlandasp.core.flatland.schemas.environment_data_schema import (
 from flatlandasp.core.utils.file_utils import create_path_if_not_exist
 from flatlandasp.flatland_asp_config import get_config
 
+from flatland.core.grid.rail_env_grid import RailEnvTransitions
+from flatland.core.transition_map import GridTransitionMap
+from flatland.envs.line_generators import LineGenerator, sparse_line_generator
+from flatland.envs.observations import GlobalObsForRailEnv
 from flatland.envs.persistence import RailEnvPersister
 from flatland.envs.rail_env import RailEnv
+from flatland.envs.rail_generators import rail_from_grid_transition_map
 
 
 class TupleEncoder(json.JSONEncoder):
@@ -87,3 +92,27 @@ def read_from_pickle_file(file_name: str,
     env, _ = RailEnvPersister.load_new(filename=f'{path}{file_name}')
 
     return env
+
+
+def get_environment_from_json(file_name: str, *,
+                              number_of_agents: Optional[int] = None,
+                              line_generator: LineGenerator = sparse_line_generator()):
+    environment_data = read_data_from_json_file(
+        file_name=file_name)
+
+    if (number_of_agents is None):
+        number_of_agents = environment_data.number_of_agents
+
+    grid_transition_map = GridTransitionMap(width=environment_data.grid.shape[1],
+                                            height=environment_data.grid.shape[0],
+                                            transitions=RailEnvTransitions())
+    grid_transition_map.grid = environment_data.grid
+
+    return RailEnv(width=grid_transition_map.width,
+                   height=grid_transition_map.height,
+                   rail_generator=rail_from_grid_transition_map(
+                       grid_transition_map, environment_data.optionals),
+                   line_generator=line_generator,
+                   number_of_agents=number_of_agents,
+                   obs_builder_object=GlobalObsForRailEnv()
+                   )

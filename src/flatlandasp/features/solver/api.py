@@ -1,13 +1,6 @@
-import logging
 
 from clingo import Control
 from fastapi import APIRouter, HTTPException
-from flatland.core.grid.rail_env_grid import RailEnvTransitions
-from flatland.core.transition_map import GridTransitionMap
-from flatland.envs.line_generators import sparse_line_generator
-from flatland.envs.observations import GlobalObsForRailEnv
-from flatland.envs.rail_env import RailEnv
-from flatland.envs.rail_generators import rail_from_grid_transition_map
 
 from flatlandasp.core.asp.instance_descriptions.base_instance import BaseInstance
 from flatlandasp.core.asp.instance_generator import InstanceGenerator
@@ -21,25 +14,6 @@ router = APIRouter()
 logger = get_logger()
 
 
-def get_environment_from_json(file_name: str, number_of_agents: int):
-    environment_data = environment_crud.read_data_from_json_file(
-        file_name=file_name)
-
-    grid_transition_map = GridTransitionMap(width=environment_data.grid.shape[1],
-                                            height=environment_data.grid.shape[0],
-                                            transitions=RailEnvTransitions())
-    grid_transition_map.grid = environment_data.grid
-
-    return RailEnv(width=grid_transition_map.width,
-                   height=grid_transition_map.height,
-                   rail_generator=rail_from_grid_transition_map(
-                       grid_transition_map, environment_data.optionals),
-                   line_generator=sparse_line_generator(),
-                   number_of_agents=number_of_agents,
-                   obs_builder_object=GlobalObsForRailEnv()
-                   )
-
-
 @router.post("/solve")
 def solve(input: SolverInput):
     try:
@@ -50,8 +24,8 @@ def solve(input: SolverInput):
             environment = environment_crud.read_from_pickle_file(
                 f'{input.environment_name}.pkl')
         else:
-            environment = get_environment_from_json(
-                f'{input.environment_name}.json', input.number_of_agents)
+            environment = environment_crud.get_environment_from_json(
+                f'{input.environment_name}.json', number_of_agents=input.number_of_agents)
 
         environment.reset()
 
